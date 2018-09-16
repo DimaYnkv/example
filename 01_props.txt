@@ -1,0 +1,158 @@
+Challenge 01 - Basic Component Prop
+Download 01-props--start.zip and unzip it into your workspace
+CD into your new project VSCode internal terminal
+If the node_modules folder is not present - 
+Install the necessary dependencies,   npm install 
+Start your project by running npm run dev in the terminal
+View the result at localhost:3000
+Create a Vacation component that has a boolean prop free
+The component should render a div with either the text "Vacancy" or "No Vacancy" depending on the prop value 
+being it true or false.
+=======================================================
+
+
+
+App.js
+
+import React, { Component } from 'react';
+import Card from './Card'; 
+import TopBar from './TopBar'; 
+import Vicasion from './Vicasion';
+//import Vacation from './Vacation'; 
+
+/*export default class App extends Component {
+
+    render() {
+        return (
+        <div className="app">
+            <TopBar/>
+            <h1 className="headline white-text">I am the main Application!!!</h1>
+            <Card action="greet" subject="people"/>		
+        </div>
+        )
+    }
+
+}*/
+
+export default ()=> {
+    return (
+      <div className="app">
+         <TopBar/>
+		 <h1 className="headline white-text">I am the main Application</h1>
+         <Card action="greet" subject="people"/>	
+         <Vicasion free={true} />		
+	  </div>
+    )
+}
+======================
+Card.js
+
+import React, { Component } from 'react';
+import Thumb from './Thumb';
+
+/*export default class Card extends Component {
+  render() {
+    return (
+      <div className="card">
+        <h1 className="headline">I am a Card</h1>
+        <h2 className="paragraph">my goal is to {this.props.action} some {this.props.subject}</h2>
+	    </div>
+    )
+  }
+}*/
+
+/*export default class Card extends Component {
+  render() {
+    let { action, subject } = this.props
+    return (
+      <div className="card">
+        <h1 className="headline">I am Card</h1>
+        <h2 className="paragraph">i {action} {subject}</h2>
+      </div>
+    )
+  }
+}*/
+
+//-------------------------------------
+//   Stateless Function Components
+//-------------------------------------
+
+/*export default (props) => {
+  let { action, subject } = props
+  return (
+    <div className="card">
+      <h1 className="headline">I am a Card</h1>
+      <h2 className="paragraph">i {action} {subject}</h2>
+    </div>
+  )
+}*/
+
+/*export default ({ action, subject }) => {
+  return (
+    <div className="card">
+      <h1 className="headline">I am a Card</h1>
+      <h2 className="paragraph">i {action} {subject}</h2>
+    </div>
+  )
+}*/
+
+export default (props) => {
+  let { action, subject } = props
+  return (
+    <div className="card">
+      <h1 className="headline">I am a Card</h1>
+      <h2 className="paragraph">my goal is to {action} some {subject}</h2>
+      <Thumb {...props} />
+    </div>
+  )
+}===============================
+
+Thumb.js
+
+import React from 'react';
+
+export default ( {action,subject} ) => {
+    return (
+      <div className="thumb">
+		<h4 className="headline fz35 white-text">Thumbnail component</h4>
+		<img src="http://lorempixel.com/100/100/people/"/>
+		<h5 className="paragraph white-text fz30">passed props: {action} {subject}</h5>
+	  </div>
+    )
+}
+===============================
+TopBar.js
+
+import React from 'react';
+
+export default ()=> {
+    return(
+        <div className="top-bar">
+            <h1>I am the top bar</h1>
+            <img className="logo" src="/static/icons/logo.svg" alt="logo"/>
+        </div>
+    )   
+}
+======================
+Vication
+
+import React, { Component } from 'react';
+import Thumb from './Thumb';
+
+export default (free) => {
+    var vic;
+    if(free){
+      vic="Vacancy"
+    }
+    else{
+      vic="No Vacancy"
+    }
+      return (
+      <div>
+          <h4 className="headline fz35 white-text">Vacation component</h4>
+      <h5 className="paragraph blue-text fz30">{vic}</h5>
+        </div>
+      )
+  
+  }
+============================

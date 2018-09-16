@@ -1,0 +1,263 @@
+Challenge 04 –
+Filter lists
+1. Download 05-list.zip and unzip it into your workspace
+2. CD into your new project in your terminal
+3. If the node_modules folder is not present -
+Install the necessary dependencies, npm install
+4. Start your project by running npm run dev in the terminal
+5. View the result at localhost:3000
+6. Create a Filter.js component file, import it to the app and create an instance of Filter in
+the main App component.
+7. The Filter component responsibility is to filter the original_list and change the app.state
+as a result.
+8. Refactor the app to contain the necessary state structure and connect it to the filter and
+the List instances.
+
+
+app
+import React, { Component } from 'react';
+import fetch from 'isomorphic-fetch';
+import Card from './Card'; 
+import TopBar from './TopBar'; 
+import List from './List'; 
+import Filter from './Filter'; 
+
+
+export default class App extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            original_list:[],
+            displayed_list:[]
+        }
+    }
+    componentWillMount(){
+		fetch('//localhost:3000/static/data/MOCK_DATA.json')
+            .then( response => {
+                if(response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then( data => {
+                 //console.table(data);
+                 console.log(`${data.length} items loaded`);
+                 this.setState({
+                     original_list:data,
+                     displayed_list: data
+                });
+            })
+            .catch( error => {
+                console.error(`fetch operation failed: ${error.message}`);
+            });
+	}
+    update_list_state(filtered_list){
+        console.log('update_list_state',filtered_list.length)
+        this.setState({
+            original_list : this.state.original_list,
+            displayed_list: filtered_list
+        })
+   }
+    render() {
+        return (
+        <div className="app">
+            <TopBar>Filtering the list</TopBar>
+            <div className="header">
+                <h4 className="filter_title">{this.state.displayed_list.length} items filtered</h4>
+                <Filter className="filter" 
+                        list_data={this.state.original_list} 
+                        on_filter={(fl)=> this.update_list_state(fl)}
+// tomer!!! on_filter={this.update_list_state.bind(this)}/>
+            </div>
+            <List list_data={this.state.displayed_list}/>
+        </div>
+        )
+    }
+}
+====================================
+Card
+import React, { Component } from 'react';
+import Thumb from './Thumb';
+
+
+export default ( {first_name,country,description,avatar} ) => {
+//	console.log('first_name:',first_name)
+//	console.log('props:',props)
+    return (
+        <div className="card">
+      		<Thumb image_url={avatar}/>
+      		<div className="texts-box">
+      			<h1 className="card-title paragraph">{first_name} from {country}</h1>
+      			<p className="card-msg">{description}</p>
+      		</div>
+        </div>
+    )
+}
+++=======================================
+Filter 
+
+import React, { Component, PropTypes } from 'react';
+
+export default class Filter extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+    update_list(event) {
+        //console.log('update_list')
+        const { list_data , on_filter } = this.props;
+        let txt = event.target.value;
+
+        let filtered_list = list_data.filter( item =>
+            item.first_name.toLowerCase().includes(txt.toLowerCase()) 
+        )
+        on_filter(filtered_list)
+    }
+    render() {
+        return <input type="text" className="filter" onChange={(e) => this.update_list(e)} />
+    }
+
+    // static propTypes = {
+    //     on_filter: PropTypes.func.isRequired,
+    //     list_data: PropTypes.arrayOf(PropTypes.shape({
+    //         id: PropTypes.number.isRequired,
+    //         first_name: PropTypes.string.isRequired,
+    //         last_name: PropTypes.string.isRequired,
+    //         email: PropTypes.string.isRequired,
+    //         country: PropTypes.string.isRequired,
+    //         description: PropTypes.string.isRequired,
+    //         avatar: PropTypes.string.isRequired,
+    //     })).isRequired
+    // }
+}
+Filter.propTypes = {
+    on_filter: PropTypes.func.isRequired,
+    list_data: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        first_name: PropTypes.string.isRequired,
+        last_name: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+        country: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        avatar: PropTypes.string.isRequired,
+    })).isRequired
+}
+
+
+
+======================================
+Filter2
+import React, { Component, PropTypes } from 'react';
+
+export default class Filter extends Component {
+
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            str:'',
+            filtered_list:[],
+            original_list:[]
+        }
+    }
+    componentWillReceiveProps(nextProps){
+		console.log('component Will Receive Props - Name_input ');
+        if(this.state.original_list.length === 0){
+            this.setState(Object.assign(this.state,{        
+                filtered_list : nextProps.list_data,
+                original_list : nextProps.list_data
+            }))
+        }
+	}
+    update_list(event) {
+        //console.log('update_list')
+        const { list_data , on_filter } = this.props;
+        let txt = event.target.value;
+
+        let origin = txt.length > this.state.str.length ? this.state.filtered_list : this.state.original_list;
+
+        console.log('origin.length',origin.length)
+        let filtered_list = origin.filter( item =>
+            item.first_name.toLowerCase().includes(txt.toLowerCase()) 
+        )
+        this.setState(Object.assign(this.state,{  
+            str:txt,      
+            filtered_list : filtered_list,
+        }))
+        //console.log('length', filtered_list.length)
+        on_filter(filtered_list)
+    }
+    render() {
+        return <input type="text" className="filter" onChange={(e) => this.update_list(e)} />
+    }
+
+    // static propTypes = {
+    //     on_filter: PropTypes.func.isRequired,
+    //     list_data: PropTypes.arrayOf(PropTypes.shape({
+    //         id: PropTypes.number.isRequired,
+    //         first_name: PropTypes.string.isRequired,
+    //         last_name: PropTypes.string.isRequired,
+    //         email: PropTypes.string.isRequired,
+    //         country: PropTypes.string.isRequired,
+    //         description: PropTypes.string.isRequired,
+    //         avatar: PropTypes.string.isRequired,
+    //     })).isRequired
+    // }
+}
+Filter.propTypes = {
+    on_filter: PropTypes.func.isRequired,
+    list_data: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        first_name: PropTypes.string.isRequired,
+        last_name: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+        country: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        avatar: PropTypes.string.isRequired,
+    })).isRequired
+}
+
+
+
+
+===========================================
+List
+
+import React from 'react';
+import Card from './Card';
+
+export default ( {list_data} ) => {
+    return (
+      <div className="cards-list">
+			<ul>
+				{
+					list_data.map( item =>  
+						<li key={item.id} className="card-item"> <Card {...item} /> </li> 
+						)
+				}
+			</ul>
+	  </div>
+    )
+}
+=============================================
+thumb
+import React from 'react';
+
+export default ( {image_url} ) => {
+    return (
+        <div className="thumb-box">
+		      <img className="thumb" src={image_url}/>
+	    </div>
+    )
+}
+==============================
+TopBar
+import React from 'react';
+export default ({children})=> {
+    return(
+        <div className="top-bar">
+            <h1>{children}</h1>
+            <img className="logo" src="static/icons/logo.svg" alt="logo"/>
+        </div>
+    )   
+}

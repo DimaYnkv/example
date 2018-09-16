@@ -1,0 +1,109 @@
+Challenge 02 - Component state
+Download 02-state--start.zip and unzip it into your workspace
+CD into your new project VSCode internal terminal
+If the node_modules folder is not present - 
+Install the necessary dependencies,   npm install 
+Start your project by running npm run dev in the terminal
+View the result at localhost:3000
+Create a new Component file called Bookings.js
+Refactor the app.js state into the Bookings component will have its own state, along with the related UI and the function updating the state.
+The app.js should have no state, instead – we will have two instances – 1 of the Bookings and 1 of the NameInput – 
+each one of them is managing its own internal state. 
+
+
+==================
+App.js
+import React, { Component } from 'react';
+import TopBar from './TopBar'; 
+import NameInput from './NameInput'; 
+import Bookings from './Bookings';
+
+export default class App extends Component {
+
+    constructor(){
+		super()
+		this.state = { 
+            another_key : "some value"
+        }
+	}
+
+    render() {
+        console.log('rendering...')
+        return (
+        <div className="app">
+            <TopBar>React Components are state machines</TopBar>
+            <h1 className="headline white-text">What is the STATE of affairs??</h1>
+            <Bookings />
+            <NameInput/>
+        </div>
+        )
+    }
+}
+
+=========================
+Booking.js
+
+import React, { Component } from 'react';
+
+export default class Bookings extends Component {
+	
+	constructor(props){
+		super(props)
+		this.state = { booked_items : 4 }
+	}
+
+	book_item(){
+		let booked = this.state.booked_items + 2
+		this.setState({ booked_items : booked})
+	}
+
+	render() {
+		return ( 
+              <div className="hbox space-between mt20">
+                <h3 className="paragraph">Items booked: {this.state.booked_items}</h3>
+                <button className="button" 
+                        onClick={()=> this.book_item() }>Book Item!</button>	
+            </div>
+		);
+	}
+}
+====================================
+NameInput.js
+
+import React, { Component } from '../../../../../AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/react';
+
+export default class Name_input extends Component {
+	
+	constructor(props){
+		super(props)
+		this.state = { your_name : '' }
+	}
+	update_answer(event){
+		this.setState({ your_name : event.target.value})
+	}
+	render() {
+		return (
+		    <div className="vbox mt20"> 
+                <div className="hbox space-between">
+                    <h1 className="paragraph">What is your name?</h1>
+                    <input type="text" 
+                           className="input cap"
+                           placeholder="Your name here..." 
+                           onChange={(e)=> this.update_answer(e)}/>
+                </div>
+                <h3 className="paragraph text-left white-text cap">Your input: {this.state.your_name}</h3>
+            </div>
+		);
+	}
+}
+=========================================
+topBar
+import React from '../../../../../AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/react';
+export default ({children})=> {
+    return(
+        <div className="top-bar">
+            <h1>{children}</h1>
+            <img className="logo" src="static/icons/logo.svg" alt="logo"/>
+        </div>
+    )   
+}

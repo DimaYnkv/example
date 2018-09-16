@@ -1,0 +1,318 @@
+Challenge 06 – Routing Bots
+1. Download 07-profile-details.zip and unzip it into your workspace
+2. CD into your new project in your terminal
+3. If the node_modules folder is not present -
+Install the necessary dependencies, npm install
+4. Start your project by running npm run dev in the terminal
+5. View the result at localhost:3000
+6. As you will see in the screenshots below – you need to refactor the project to include
+some routing.
+What use to be the App.js component – need to be a Browse component,
+and the new App component will have the routing logic.
+You will need to create a Welcome.js component and a Create.js component as well.
+These two can be just simple placeholders
+
+no
+==============================================
+
+app
+import React from 'react';
+
+import TopBar from './TopBar'; 
+
+import Basic_routing_example from './Basic_routing'; 
+import HashRouter_example from './HashRouterSwitch'; 
+import URLParameters_example from './URLParameters'; 
+import Redirects_example from './Redirects'; 
+
+/* ----------------------
+   1) hello router
+-------------------------*/
+/*const App = ()=> (
+    <div className="app">
+        <TopBar>React Router v4</TopBar>
+        <h1 className="headline white-text">Declarative Routing</h1>
+    </div>
+)
+export default App*/
+
+
+/* ------------------------------------------------
+   2) basic routing - BrowserRouter 
+---------------------------------------------------*/
+// const App = ()=> (
+//     <Basic_routing_example/>
+// )
+// export default App
+
+
+/* --------------------------
+   3) HashRouter and switch
+-----------------------------*/
+// const App = () => (
+//   <HashRouter_example/>
+// )
+// export default App
+
+
+/* -------------------------------------
+   4) URL Parameters, match & basename
+----------------------------------------*/
+// const App = () => (
+//   <URLParameters_example/>
+// )
+// export default App
+
+
+/* -------------------------------------
+   5) Redirects and render functions
+----------------------------------------*/
+const App = () => (
+  <Redirects_example/>
+)
+export default App
+
+=============================================================
+Basic_routing
+
+import React from 'react';
+import {
+    BrowserRouter,
+    Route,
+    Link
+} from 'react-router-dom';
+import TopBar from './TopBar'; 
+
+/* ------------------------------------------------
+   2) basic routing - BrowserRouter 
+---------------------------------------------------*/
+const Home = () => <h1 className="headline white-text">Home</h1>;
+const About = () => <h1 className="headline white-text">About</h1>;
+const Contact = () => <h1 className="headline white-text">Contact</h1>;
+
+const Links = () => (
+    <ul className="link-bar">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+        <li><Link to="/contact">Contact</Link></li>
+    </ul>
+)
+const App = ()=> (
+        <BrowserRouter>   
+            <div className="app">
+                <TopBar><Links /></TopBar>
+                <Route exact path="/" component={Home} />
+                <Route path="/about" component={About}></Route>
+		        <Route path="/contact" component={Contact}></Route>
+            </div>
+        </BrowserRouter>
+)
+export default App
++++++++++++++++++++++++++++++++++++++++++++++
+HashRouterSwitch
+
+
+import React from 'react';
+import {
+    BrowserRouter,
+    HashRouter,
+    Route,
+    Link,
+    Switch
+} from 'react-router-dom';
+import TopBar from './TopBar'; 
+
+/* --------------------------
+   3) HashRouter and switch
+-----------------------------*/
+
+const Home = () => <h1 className="headline white-text">Home</h1>;
+const About = () => <h1 className="headline white-text">About</h1>;
+const Contact = () => <h1 className="headline white-text">Contact</h1>;
+const NoMatch = () => <h1 className="headline white-text">404 - No such route...</h1>;
+
+const Links = () => (
+    <ul className="link-bar">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+        <li><Link to="/contact">Contact</Link></li>
+        <li><Link to="/not-existing-route">Wrong</Link></li>
+    </ul>
+)
+
+// hashType=""   
+// slash    - Creates hashes like #/ and #/sunshine/lollipops
+// noslash  - Creates hashes like # and #sunshine/lollipops 
+// hashbang - Creates “ajax crawlable” (deprecated by Google) hashes like 
+const App = ()=> (
+        <HashRouter hashType="slash">   
+            <div className="app">
+                <TopBar><Links /></TopBar>
+                {/*<Switch>*/}
+                    <Route exact path="/" component={Home} />
+                    <Route path="/about" component={About}></Route>
+                    <Route path="/contact" component={Contact}></Route>
+                    <Route component={NoMatch}></Route>
+                {/*</Switch>*/}
+            </div>
+        </HashRouter>
+)
+export default App
++++++++++++++++++++++++++++++++++++++++
+Redirects
+
+import React from 'react';
+import {
+    HashRouter,
+    Route,
+    Link,
+    Redirect,
+    Switch
+} from 'react-router-dom';
+
+import TopBar from './TopBar'; 
+
+/* -------------------------------------
+   5) Redirects and render functions
+----------------------------------------*/
+// /*const Links = () => (
+//     <ul className="link-bar">
+//         <li><Link to="/">Homepage</Link></li>
+//         <li><Link to="/old">Old</Link></li>
+//         <li><Link to="/new">New</Link></li>
+//     </ul>
+// )
+
+// const Example = () => (
+//   <HashRouter>
+//     <div className="app">
+//         <TopBar><Links /></TopBar>
+//         {/*<Switch>*/}
+//             <Route exact path="/" render={ ()=> (<h1 className="headline white-text">Home</h1>) }/>
+//             <Route path="/new" render={ ()=> (<h1 className="headline white-text">New</h1>) }/>
+//             <Redirect from="/old" to="/new"/>
+//         {/*</Switch>*/}
+//     </div>
+//   </HashRouter>
+// )
+
+// export default Example*/
+
+/* -------------------------------------
+   5) Redirecting parameters
+----------------------------------------*/
+/*const Links = () => (
+    <ul className="link-bar">
+        <li><Link to="/">Homepage</Link></li>
+        <li><Link to="/old/123">Old</Link></li>
+        <li><Link to="/new/456">New</Link></li>
+    </ul>
+)
+
+const Example = () => (
+  <HashRouter>
+    <div className="app">
+        <TopBar><Links /></TopBar>
+    
+        <Route exact path="/" render={ ()=> (<h1 className="headline white-text">Home</h1>) }/>
+        <Route path="/new/:str" 
+               render={ ({match})=> (<h1 className="headline white-text">New {match.params.str}</h1>) }/>
+        <Route path="/old/:str" render={ ({match})=> (
+            <Redirect to={`/new/${match.params.str}`} />
+        )}/>       
+       
+    </div>
+  </HashRouter>
+)
+
+export default Example*/
+
+/* -------------------------------------
+   5) Conditional Redirecting 
+      - protected routes example
+----------------------------------------*/
+const loggedin = false;
+const Links = () => (
+    <ul className="link-bar">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+        <li><Link to="/market">Market</Link></li>
+        <li><Link to="/protected">Protected</Link></li>
+    </ul>
+)
+
+const Example = () => (
+  <HashRouter>
+    <div className="app">
+        <TopBar><Links /></TopBar>
+    
+        <Route exact path="/" render={ ()=> (<h1 className="headline white-text">Home</h1>) }/>
+        <Route path="/login" render={ ()=> (<h1 className="headline white-text">Please Login</h1>) }/>
+        <Route path="/about" render={ ()=> (<h1 className="headline white-text">About</h1>) }/>
+        <Route path="/market" render={ ()=> (<h1 className="headline white-text">Marketplace</h1>) }/>
+        <Route path="/protected"  render={ ()=> (
+            loggedin === true
+            ? <h1 className="headline white-text">This is the protected content...</h1>
+            : <Redirect to="/login" />
+        )} />
+    </div>
+  </HashRouter>
+)
+
+export default Example
+==============================================
+topBar
+
+import React from 'react';
+
+export default ({children})=> {
+    return(
+        <div className="top-bar">
+            <h1>{children}</h1>
+            <img className="logo" src="/static/icons/logo.svg" alt="logo"/>
+        </div>
+    )   
+}
+============================================
+URLParameters
+
+
+import React from 'react';
+import {
+    HashRouter,
+    Route,
+    Link
+} from 'react-router-dom';
+
+import TopBar from './TopBar'; 
+
+/* -------------------------------------
+   4) URL Parameters, match & basename
+----------------------------------------*/
+const Child = ({ match }) => {
+    console.log(match);
+    return (
+        <div>
+            <h1 className="headline white-text">Brand: {match.params.brand}</h1>
+        </div>
+    )
+}
+
+const Links = () => (
+    <ul className="link-bar">
+        <li><Link to="/netflix/read">Netflix</Link></li>
+        <li><Link to="/facebook/read">Facebook</Link></li>
+        <li><Link to="/yahoo/read">Yahoo</Link></li>
+    </ul>
+)
+
+const Example = () => (
+  <HashRouter basename="stories">
+    <div className="app">
+      <TopBar><Links /></TopBar>
+      <Route path="/:brand/read" component={Child}/>
+    </div>
+  </HashRouter>
+)
+
+export default Example

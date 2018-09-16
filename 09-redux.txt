@@ -1,0 +1,167 @@
+1. Download 09-redux-seed.zip and unzip it into your workspace
+2. CD into your new project in your terminal
+3. If the node_modules folder is not present -
+Install the necessary dependencies, npm install
+4. Start your project by running npm run dev in the terminal
+5. View the result at localhost:3000
+6. Your task is to create 2 new and separate components
+ColorPicker.js and ColorDisplay.js
+7. ColorPicker will contain 3 buttons to choose 3 colors – red, green and blue
+8. ColorDisplay will contain a view that displays the chosen color. It can be a simple label
+saying the color name, no need to focus on styling and looks but simply on the
+functionality. The idea is to give you a reason to create views, actions, reducers and
+modify the shape design of the app state.
+
+==============================================
+ColorDisplay.view
+
+import React from 'react';
+
+
+export default ({chosenColor})=> {
+    return(
+        <h1>
+           chosen: {chosenColor}   
+        </h1>
+    )   
+}
+=====================
+ColorPicker:
++++++++++++++++
+ColorPicker.actions:
+
+export const COLOR_PICKED = 'COLOR_PICKED'
+export const RED = 'RED'
+export const GREEN = 'GREEN'
+export const BLUE = 'BLUE'
+
+export const changeColor = (color)=> ({ 
+    type: COLOR_PICKED,
+    color 
+})
+
++++++++++++++++++++
+
+ColorPicker.reducer
+
+
+import {
+  COLOR_PICKED,
+  BLUE
+} from './ColorPicker.actions'
+
+//import * as actions from './Counter.actions'
+
+export default function(state = BLUE, action) {
+
+    switch (action.type) {
+      
+      case COLOR_PICKED:
+        return action.color;
+      
+      default:
+        return state
+    }
+
+}
++++++++++++++++++++++++++++
+
+ColorPicker.view
+
+import React from 'react';
+//import css from './TopBar.css'
+import {
+    RED, GREEN, BLUE
+} from './ColorPicker.actions'
+
+export default ({changeColor})=> {
+    
+    //const {changeColor} = props;
+
+    return(
+        <div>
+           <button onClick={ ()=> changeColor(RED) }>Red</button> 
+           <button onClick={ ()=> changeColor(GREEN)}>Green</button> 
+           <button onClick={ ()=> changeColor(BLUE) }>Blue</button> 
+        </div>
+    )   
+}
+=====================================
+Counter
+
+CounterAction
+
+export const INCREMENT = 'INCREMENT'
+export const DECREMENT = 'DECREMENT'
+
+export const increment = ()=> ({ type: INCREMENT })
+export const decrement = ()=> ({ type: DECREMENT })
+
++++++++++++++++++++++++++++++++++++++++
+
+Counter.reducer
+
+
+import {
+  INCREMENT,
+  DECREMENT
+} from './Counter.actions'
+
+//import * as actions from './Counter.actions'
+
+export default (counter_state = 0, action) => {
+
+    switch (action.type) {
+      
+      case INCREMENT:
+
+        return counter_state + 1
+
+      case DECREMENT:
+
+        return counter_state - 1
+        
+      default:
+        return counter_state
+    }
+
+}
+++++++++++++++++++++++++++++++
+
+Counter.view
+import React, { Component } from 'react';
+import PropTypes from 'prop-types'
+import cn from 'classNames';
+import css from './Counter.css'
+
+class Counter extends Component {
+
+  render() {
+
+    const { value, onIncrement, onDecrement } = this.props
+
+    return (
+      <div class={ cn( css.main , css['red-border'] )} >
+        <div class={css['btn-box']} >
+          <button class={css.btn} onClick={onIncrement}> + </button>
+          <button class={css.btn} onClick={onDecrement}> - </button>
+        </div>
+        <span class={css.label}>Clicked: {value} times</span>
+      </div>
+    )
+  }
+}
+
+Counter.propTypes = {
+  value: PropTypes.number.isRequired,
+  onIncrement: PropTypes.func.isRequired,
+  onDecrement: PropTypes.func.isRequired
+}
+
+export default Counter
+================================================
+
+
+
+
+

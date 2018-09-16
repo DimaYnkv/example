@@ -1,0 +1,15 @@
+<Filter className="filter" 
+                        list_data={this.state.original_list} 
+                        on_filter={(fl) => this.update_list_state(fl)}/>
+						function(fl) {
+							return this.update_list_state.bind(APP)(fl);
+						}
+
+
+
+<Filter className="filter" 
+                        list_data={this.state.original_list} 
+                        on_filter={(fl) => this.update_list_state(fl)}/>
+						function(fl) {
+							return this.update_list_state(fl);
+						}
